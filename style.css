@@ -10,3 +10,21 @@
 .nav-title {
     padding: 1rem;
 }
+
+.alphabet {
+    width: 500px;
+    margin: 2rem auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 150px;
+}
+
+.letter {
+    width: 100px;
+    height: 25px;
+    border-bottom: 1px solid black;
+    background-color: darkgrey;
+    text-align: center;
+    vertical-align: text-bottom;
+}
