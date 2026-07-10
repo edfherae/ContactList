@@ -29,12 +29,19 @@ const numbersDictionary = {
 };
 const alphabet = document.querySelector(".alphabet");
 if (alphabet) {
-    Object.entries(numbersDictionary).forEach(([key]) => {
+    Object.entries(numbersDictionary).forEach(([key, value]) => {
+        const alphabetCard = document.createElement("div");
+        alphabetCard.classList.add("alphabet-card");
+        alphabetCard.id = key;
         const letter = document.createElement("div");
-        letter.classList.add("letter");
         letter.textContent = key;
+        alphabetCard.append(letter);
+        const count = document.createElement("div");
+        count.classList.add("count");
+        count.textContent = `${value.length}`;
+        alphabetCard.append(count);
         // letter.addEventListener("click", () => alert(key))
-        alphabet.append(letter);
+        alphabet.append(alphabetCard);
     });
 }
 else
@@ -43,6 +50,11 @@ const nameInput = document.getElementById("nameInput");
 const vacancyInput = document.getElementById("vacancyInput");
 const numberInput = document.getElementById("numberInput");
 const addNumberButton = document.getElementById("addNumberButton");
+// Validation
+// nameInput.addEventListener("keyup")
 addNumberButton?.addEventListener("click", () => {
-    alert([nameInput.value, vacancyInput.value, numberInput.value]);
+    const currentLetter = nameInput.value[0].toUpperCase();
+    numbersDictionary[currentLetter].push({ id: Date.now(), name: nameInput.value, vacancy: vacancyInput.value, number: numberInput.value });
+    console.log(numbersDictionary[currentLetter]);
+    (document.getElementById(currentLetter)?.lastChild).textContent = `${numbersDictionary[currentLetter].length}`;
 });

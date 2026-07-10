@@ -1,14 +1,15 @@
-interface numbersDictionary1 {
+interface numbersDictionary {
     [letter: string]: phoneNumber[]
 }
 
 interface phoneNumber {
+    id: number;
     name: string;
     vacancy: string;
     number: string
 }
 
-const numbersDictionary: numbersDictionary1 = {
+const numbersDictionary: numbersDictionary = {
     "A": [],
     "B": [],
     "C": [],
@@ -40,12 +41,21 @@ const numbersDictionary: numbersDictionary1 = {
 const alphabet : Element | null = document.querySelector(".alphabet");
 
 if(alphabet) {
-    Object.entries(numbersDictionary).forEach(([key]) => {
+    Object.entries(numbersDictionary).forEach(([key, value]) => {
+        const alphabetCard : HTMLDivElement = document.createElement("div");
+        alphabetCard.classList.add("alphabet-card");
+        alphabetCard.id = key;
+
         const letter : HTMLDivElement = document.createElement("div");
-        letter.classList.add("letter");
         letter.textContent = key;
+        alphabetCard.append(letter);
+
+        const count : HTMLDivElement = document.createElement("div");
+        count.classList.add("count");
+        count.textContent = `${value.length}`;
+        alphabetCard.append(count);
         // letter.addEventListener("click", () => alert(key))
-        alphabet.append(letter);
+        alphabet.append(alphabetCard);
     })
 } else console.log("alphabet is null");
 
@@ -54,6 +64,12 @@ const vacancyInput = document.getElementById("vacancyInput") as HTMLInputElement
 const numberInput = document.getElementById("numberInput") as HTMLInputElement;
 const addNumberButton = document.getElementById("addNumberButton") as HTMLInputElement;
 
+// Validation
+// nameInput.addEventListener("keyup")
+
 addNumberButton?.addEventListener("click", () => {
-    alert([nameInput.value, vacancyInput.value, numberInput.value]);
+    const currentLetter : string = nameInput.value[0].toUpperCase();
+    numbersDictionary[currentLetter].push({id: Date.now(), name: nameInput.value, vacancy: vacancyInput.value, number: numberInput.value});
+    console.log(numbersDictionary[currentLetter]);
+    (document.getElementById(currentLetter)?.lastChild as HTMLDivElement).textContent = `${numbersDictionary[currentLetter].length}`
 });
