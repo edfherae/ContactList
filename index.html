@@ -11,18 +11,22 @@
         <h1 class="nav-title">Contact List</h1>
     </nav>
 
-    <div>
-        <input type="text" name="" id="nameInput" placeholder="Name">
-        <input type="text" name="" id="vacancyInput" placeholder="Vacancy">
-        <input type="tel" name="" id="numberInput" placeholder="Phone number">
+    <form id="addNumberForm">
+        <input type="text" name="" id="nameInput" placeholder="Name" required minlength="2">
+        <input type="text" name="" id="vacancyInput" placeholder="Vacancy" required minlength="2">
+        <input type="tel" name="" id="numberInput" placeholder="Number: 88005553535" required pattern="[0-9]{11}">
 
-        <button id="addNumberButton">Add</button>
-        <button>Clear list</button>
-        <button>Search</button>
-    </div>
+        <button id="addNumberButton" type="submit">Add</button>
+        <button id="clearListButton">Clear list</button>
+        <button id="searchNumberButton">Search</button>
+    </form>
 
     <div class="alphabet">
-        <!-- Сюда выгружать мапу -->
+        <!-- Сюда выгружается мапа -->
+    </div>
+
+    <div id="numbersOutput">
+
     </div>
 
     <script src="./script.js" defer></script>
