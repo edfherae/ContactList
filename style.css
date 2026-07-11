@@ -30,3 +30,40 @@
     display: flex;
     justify-content: space-evenly;
 }
+
+.numbers-output-container {
+    width: 80vw;
+    margin: auto;
+    margin-top: 1rem;
+    /* margin: auto 0 auto 1rem; */
+    display: none;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+
+.numbers-output-header {
+    text-align: center;
+}
+
+.numbers-output-grid {
+    display: grid;
+    width: fit-content;
+    grid-template-columns: repeat(4, 100px);
+    grid-auto-rows: minmax(100px, auto);
+}
+
+.number-card {
+    width: 600px;
+    height: 25px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-bottom: 1px solid black;
+    background-color: darkgrey;
+    display: flex;
+    justify-content: center;
+}
+
+.number-card > p {
+    padding-right: 1rem;
+}

@@ -31,7 +31,9 @@ const addNumberButton = document.getElementById("addNumberButton") as HTMLInputE
 
 const alphabet = document.querySelector(".alphabet") as HTMLDivElement;
 
-const numbersOutput = document.getElementById("numbersOutput") as HTMLDivElement;
+const numbersOutputContainer = document.querySelector(".numbers-output-container") as HTMLDivElement;
+const numbersOutputHeader = document.querySelector(".numbers-output-header") as HTMLHeadingElement;
+const numbersOutputGrid = document.querySelector(".numbers-output-grid") as HTMLDivElement;
 
 //Разграничить русский и английский алфавиты
 if(alphabet) {
@@ -40,25 +42,6 @@ if(alphabet) {
         alphabetCard.classList.add("alphabet-card");
         alphabetCard.id = key;
 
-        // стилизовать
-        // добавить очистку от предыдущих значений
-        alphabetCard.addEventListener("click", () => {
-            const letter : HTMLDivElement = document.createElement("div");
-            letter.textContent = key;
-            numbersOutput.append(letter); 
-
-            Object.values(numbersDictionary[key]).forEach(el => {
-                const numberCard : HTMLDivElement = document.createElement("div");
-                numberCard.classList.add("number-card");
-
-                const [name, vacancy, number] = [document.createElement("p"), document.createElement("p"), document.createElement("p")];
-                name.textContent = el.name; vacancy.textContent = el.vacancy; number.textContent = el.number;
-                numberCard.append(name, vacancy, number);
-
-                numbersOutput.append(numberCard);
-            });
-        });
-
         const letter : HTMLDivElement = document.createElement("div");
         letter.textContent = key;
         alphabetCard.append(letter);
@@ -66,8 +49,40 @@ if(alphabet) {
         const count : HTMLDivElement = document.createElement("div");
         count.classList.add("count");
         count.textContent = `${value.length}`;
-
         alphabetCard.append(count);
+
+        // стилизовать
+        // добавить очистку от предыдущих значений
+        alphabetCard.addEventListener("click", () => {
+            // const letter : HTMLDivElement = document.createElement("div");
+            // letter.textContent = key;
+            // letter.classList.add("alphabet-card")
+            // numbersOutput.append(letter); 
+            numbersOutputHeader.textContent = key;
+
+            numbersOutputGrid.innerHTML = `
+                <h2></h2>
+                <h4>Имя</h4>
+                <h4>Должность</h4>
+                <h4>Номер телефона</h4>
+            `;
+
+            Object.values(numbersDictionary[key]).forEach((el, i)  => {
+                const numberCard : HTMLDivElement = document.createElement("div");
+                numberCard.classList.add("number-card");
+
+                const [index, name, vacancy, number] = [document.createElement("p"), document.createElement("p"), document.createElement("p"), document.createElement("p")];
+                index.textContent = `${i + 1}.`; name.textContent = el.name; vacancy.textContent = el.vacancy; number.textContent = el.number;
+                // numberCard.append(name, vacancy, number);
+
+                // numbersOutput.append(numberCard);
+                numbersOutputGrid.append(index, name, vacancy, number);
+            });
+
+            console.log(numbersOutputContainer.style.display);
+            numbersOutputContainer.style.display = "flex";
+        });
+
         // letter.addEventListener("click", () => alert(key))
         alphabet.append(alphabetCard);
     })
