@@ -40,10 +40,16 @@
     flex-direction: column;
     justify-items: center;
     align-items: center;
+
+    background-color: darkgrey;
+    border-radius: 15px;
 }
 
 .numbers-output-header {
     text-align: center;
+    width: 90%;
+    border-bottom: 1px solid black;
+    /* margin-bottom: 1rem; */
 }
 
 .numbers-output-grid {
@@ -51,6 +57,7 @@
     width: fit-content;
     grid-template-columns: repeat(4, 100px);
     grid-auto-rows: minmax(100px, auto);
+    padding-bottom: 1rem;
 }
 
 .number-card {
@@ -66,4 +73,16 @@
 
 .number-card > p {
     padding-right: 1rem;
+}
+
+.border-l-1 {
+    border-left: 1px solid black;
+}
+
+.border-b-1 {
+    border-bottom: 1px solid black;
+}
+
+.p-1 {
+    padding: 0.25rem;
 }

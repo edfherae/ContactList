@@ -61,18 +61,32 @@ if(alphabet) {
             numbersOutputHeader.textContent = key;
 
             numbersOutputGrid.innerHTML = `
-                <h2></h2>
-                <h4>Имя</h4>
-                <h4>Должность</h4>
-                <h4>Номер телефона</h4>
+                <h2 class="p-1 border-b-1"></h2>
+                <h4 class="p-1 border-l-1 border-b-1">Имя</h4>
+                <h4 class="p-1 border-l-1 border-b-1">Должность</h4>
+                <h4 class="p-1 border-l-1 border-b-1">Номер телефона</h4>
             `;
 
-            Object.values(numbersDictionary[key]).forEach((el, i)  => {
+            Object.values(numbersDictionary[key]).forEach((el, i, arr)  => {
                 const numberCard : HTMLDivElement = document.createElement("div");
                 numberCard.classList.add("number-card");
 
                 const [index, name, vacancy, number] = [document.createElement("p"), document.createElement("p"), document.createElement("p"), document.createElement("p")];
-                index.textContent = `${i + 1}.`; name.textContent = el.name; vacancy.textContent = el.vacancy; number.textContent = el.number;
+                index.textContent = `${i + 1}.`; 
+                name.textContent = el.name; 
+                vacancy.textContent = el.vacancy; 
+                number.textContent = el.number;
+
+                if(!((i + 1) === arr.length)) {
+                    index.classList.add("p-1", "border-b-1");
+                    name.classList.add("p-1", "border-b-1", "border-l-1");
+                    vacancy.classList.add("p-1", "border-b-1", "border-l-1");
+                    number.classList.add("p-1", "border-b-1" ,"border-l-1");
+                } else {
+                    name.classList.add("p-1", "border-l-1");
+                    vacancy.classList.add("p-1", "border-l-1");
+                    number.classList.add("p-1", "border-l-1");
+                }
                 // numberCard.append(name, vacancy, number);
 
                 // numbersOutput.append(numberCard);
