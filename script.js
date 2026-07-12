@@ -14,30 +14,29 @@ const nameInput = document.getElementById("nameInput");
 const vacancyInput = document.getElementById("vacancyInput");
 const numberInput = document.getElementById("numberInput");
 const addNumberButton = document.getElementById("addNumberButton");
+const clearListButton = document.getElementById("clearListButton");
 const alphabet = document.querySelector(".alphabet");
 const numbersOutputContainer = document.querySelector(".numbers-output-container");
 const numbersOutputHeader = document.querySelector(".numbers-output-header");
 const numbersOutputGrid = document.querySelector(".numbers-output-grid");
 //Разграничить русский и английский алфавиты
-if (alphabet) {
-    Object.entries(numbersDictionary).forEach(([key, value]) => {
-        const alphabetCard = document.createElement("div");
-        alphabetCard.classList.add("alphabet-card");
-        alphabetCard.id = key;
-        const letter = document.createElement("div");
-        letter.textContent = key;
-        alphabetCard.append(letter);
-        const count = document.createElement("div");
-        count.classList.add("count");
-        count.textContent = `${value.length}`;
-        alphabetCard.append(count);
-        // стилизовать
-        // добавить очистку от предыдущих значений
-        alphabetCard.addEventListener("click", () => {
-            // const letter : HTMLDivElement = document.createElement("div");
-            // letter.textContent = key;
-            // letter.classList.add("alphabet-card")
-            // numbersOutput.append(letter); 
+Object.entries(numbersDictionary).forEach(([key, value]) => {
+    const alphabetCard = document.createElement("div");
+    alphabetCard.classList.add("alphabet-card");
+    alphabetCard.id = key;
+    const letter = document.createElement("div");
+    letter.textContent = key;
+    alphabetCard.append(letter);
+    const count = document.createElement("div");
+    count.classList.add("count");
+    count.textContent = `${value.length}`;
+    alphabetCard.append(count);
+    alphabetCard.addEventListener("click", (e) => {
+        // const letter : HTMLDivElement = document.createElement("div");
+        // letter.textContent = key;
+        // letter.classList.add("alphabet-card")
+        // numbersOutput.append(letter); 
+        if (e.currentTarget.lastChild?.textContent !== "0") {
             numbersOutputHeader.textContent = key;
             numbersOutputGrid.innerHTML = `
                 <h2 class="p-1 border-b-1"></h2>
@@ -70,13 +69,11 @@ if (alphabet) {
             });
             console.log(numbersOutputContainer.style.display);
             numbersOutputContainer.style.display = "flex";
-        });
-        // letter.addEventListener("click", () => alert(key))
-        alphabet.append(alphabetCard);
+        }
     });
-}
-else
-    console.log("alphabet is null");
+    // letter.addEventListener("click", () => alert(key))
+    alphabet.append(alphabetCard);
+});
 function clearInputs() {
     nameInput.value = "";
     vacancyInput.value = "";
@@ -93,4 +90,11 @@ addNumberForm?.addEventListener("submit", (e) => {
         (document.getElementById(currentLetter)?.lastChild).textContent = `${numbersDictionary[currentLetter].length}`;
         clearInputs();
     }
+});
+clearListButton.addEventListener("click", () => {
+    Object.keys(numbersDictionary).forEach((letter) => {
+        numbersDictionary[letter] = [];
+        (document.getElementById(letter)?.lastChild).textContent = "0";
+    });
+    numbersOutputContainer.style.display = "none";
 });
