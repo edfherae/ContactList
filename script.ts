@@ -1,5 +1,7 @@
 interface NumbersDictionary {
-    [letter: string]: PhoneNumber[]
+    data : { [letter: string]: PhoneNumber[] },
+    getContactById : (id : number) => PhoneNumber,
+    deleteContact : (id : number, letter : string) => void
 }
 
 interface PhoneNumber {
@@ -11,14 +13,22 @@ interface PhoneNumber {
 
 const numbersDictionary: NumbersDictionary = {
     // Английский алфавит
-    "A": [{id: 1, name: "a", vacancy: "SEO", number: "88555553535"}, {id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"}, {id: 3, name: "aaron", vacancy: "SEOo", number: "80555553535"}, {id: 4, name: "aronium", vacancy: "SEOo", number: "80555553535"}, {id: 5, name: "arondy", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"}],
-    "B": [], "C": [], "D": [], "E": [], "F": [], "G": [], "H": [], "I": [], "J": [], "K": [], "L": [], "M": [], 
-    "N": [], "O": [], "P": [], "Q": [], "R": [], "S": [], "T": [], "U": [], "V": [], "W": [], "X": [], "Y": [], "Z": [],
+    data : {
+        "A": [{id: 1, name: "a", vacancy: "SEO", number: "88555553535"}, {id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"}, {id: 3, name: "aaron", vacancy: "SEOo", number: "80555553535"}, {id: 4, name: "aronium", vacancy: "SEOo", number: "80555553535"}, {id: 5, name: "arondy", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"}],
+        "B": [], "C": [], "D": [], "E": [], "F": [], "G": [], "H": [], "I": [], "J": [], "K": [], "L": [], "M": [], 
+        "N": [], "O": [], "P": [], "Q": [], "R": [], "S": [], "T": [], "U": [], "V": [], "W": [], "X": [], "Y": [], "Z": [],
 
-    // Русский алфавит
-    "А": [], "Б": [], "В": [], "Г": [], "Д": [], "Е": [], "Ё": [], "Ж": [], "З": [], "И": [], "Й": [], "К": [], 
-    "Л": [], "М": [], "Н": [], "О": [], "П": [], "Р": [], "С": [], "Т": [], "У": [], "Ф": [], "Х": [], "Ц": [], 
-    "Ч": [], "Ш": [], "Щ": [], "Ъ": [], "Ы": [], "Ь": [], "Э": [], "Ю": [], "Я": []
+        // Русский алфавит
+        "А": [], "Б": [], "В": [], "Г": [], "Д": [], "Е": [], "Ё": [], "Ж": [], "З": [], "И": [], "Й": [], "К": [], 
+        "Л": [], "М": [], "Н": [], "О": [], "П": [], "Р": [], "С": [], "Т": [], "У": [], "Ф": [], "Х": [], "Ц": [], 
+        "Ч": [], "Ш": [], "Щ": [], "Ъ": [], "Ы": [], "Ь": [], "Э": [], "Ю": [], "Я": []
+    },
+    getContactById(id : number) {
+        return Object.values(this.data).flat().filter(contact => contact.id !== id)[0]
+    },
+    deleteContact(id : number, letter : string) {
+        this.data[letter] = this.data[letter].filter(contact => contact.id !== id); 
+    }
 };
 
 const addNumberForm = document.getElementById("addNumberForm") as HTMLFormElement;
@@ -62,14 +72,25 @@ function openModal(type: "search" | "change") {
             modalNameInput.placeholder = "Name";
             modalVacancyInput.placeholder = "Vacancy";
             modalNumberInput.placeholder = "Number";
+
             modalSubmitButton.addEventListener("click", () => {
                 let result : Array<PhoneNumber> = Object.values(numbersDictionary).flat().filter(contact => {
                     return (modalNameInput.value === "" ? false : contact.name.toLowerCase().trim().includes(modalNameInput.value.toLowerCase().trim())) || 
                     (modalVacancyInput.value === "" ? false : contact.vacancy.toLowerCase().trim().includes(modalVacancyInput.value.toLowerCase().trim())) ||
                     (modalNumberInput.value === "" ? false : contact.number.toLowerCase().trim().includes(modalNumberInput.value.toLowerCase().trim()));
                 });
-                let HTML = result.map(contact => `<div><p>${contact.name}</p><p>${contact.vacancy}</p><p>${contact.number}</p></div>`)
+
+                let HTML = result.map(contact => `
+                    <div>
+                        <p>${contact.name}</p><p>${contact.vacancy}</p><p>${contact.number}</p>
+                        <button onclick="openChangeModal(${contact.id})">Change</button>
+                        <button onclick="deleteContact(${contact.id}, ${contact.name[0]})">Delete</button>
+                    </div>`)
                 modalOutput.innerHTML = HTML.join("");
+                //добавить кнопки изменения и удаления
+                //контакты хранить в массиве, перерисовывать при изменении
+                //выводить их в инпутах, разблокировать при изменении, кнопку менять на submit
+                //менять в основном списке по id
             });
             break;
         case "change":
@@ -82,8 +103,12 @@ function openModal(type: "search" | "change") {
 
     (document.querySelector(".modal-window") as HTMLDialogElement).showModal()
 }
+
+function openChangeModal(id: string) {
+
+}
             
-            //Разграничить русский и английский алфавиты
+//Разграничить русский и английский алфавиты
 Object.entries(numbersDictionary).forEach(([key, value]) => {
     const alphabetCard : HTMLDivElement = document.createElement("div");
     alphabetCard.classList.add("alphabet-card");
@@ -113,7 +138,7 @@ Object.entries(numbersDictionary).forEach(([key, value]) => {
                 <h4 class="p-1 border-l-1 border-b-1">Номер телефона</h4>
             `;
 
-            Object.values(numbersDictionary[key]).forEach((el, i, arr)  => {
+            Object.values(numbersDictionary.data[key]).forEach((el, i, arr)  => {
                 const numberCard : HTMLDivElement = document.createElement("div");
                 numberCard.classList.add("number-card");
 
@@ -159,11 +184,11 @@ addNumberForm?.addEventListener("submit", (e) => {
     e.preventDefault();
     if(addNumberForm.reportValidity()) {
         const currentLetter : string = nameInput.value[0].toUpperCase();
-        numbersDictionary[currentLetter].push({id: Date.now(), name: nameInput.value, vacancy: vacancyInput.value, number: numberInput.value});
+        numbersDictionary.data[currentLetter].push({id: Date.now(), name: nameInput.value, vacancy: vacancyInput.value, number: numberInput.value});
 
-        console.log(numbersDictionary[currentLetter]);
+        console.log(numbersDictionary.data[currentLetter]);
 
-        (document.getElementById(currentLetter)?.lastChild as HTMLDivElement).textContent = `${numbersDictionary[currentLetter].length}`
+        (document.getElementById(currentLetter)?.lastChild as HTMLDivElement).textContent = `${numbersDictionary.data[currentLetter].length}`
         
         clearInputs();
     }
@@ -171,7 +196,7 @@ addNumberForm?.addEventListener("submit", (e) => {
 
 clearListButton.addEventListener("click", () => {
     Object.keys(numbersDictionary).forEach((letter) => {
-        numbersDictionary[letter] = [];
+        numbersDictionary.data[letter] = [];
         (document.getElementById(letter)?.lastChild as HTMLDivElement).textContent = "0";
     })
     numbersOutputContainer.style.display = "none";
