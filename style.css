@@ -86,3 +86,36 @@
 .p-1 {
     padding: 0.25rem;
 }
+
+.modal-window {
+  width: 90%;
+  max-width: 700px;
+  padding: 24px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  margin: auto; 
+}
+
+.modal-window::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+}
+
+.modal-input-container {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.modal-input-container > input {
+    height: 30px;
+    margin-right: 0.5rem;
+}
+
+.modal-close {
+    font-family: sans-serif;
+    cursor: pointer;
+}

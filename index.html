@@ -25,7 +25,7 @@
     
 
     <div class="alphabet">
-        <!-- Сюда выгружается мапа -->
+        <!-- Сюда выгружается алфавит -->
     </div>
 
     <div class="numbers-output-container">
@@ -34,6 +34,25 @@
             <!-- Выгрузка номеров по нажатию -->
         </div>
     </div>
+
+    <!-- <div class="modal-container">
+        <div class="modal-window"></div>
+    </div> -->
+    <dialog class="modal-window">
+        <div style="display: flex; justify-content: space-between;">
+            <h2 class="modal-action"></h2>
+            <p class="modal-close">X</p>
+        </div>
+        <div class="modal-input-container">
+            <input class="modal-name" type="text">
+            <input class="modal-vacancy" type="text">
+            <input class="modal-number" type="text">
+        </div>
+
+        <button class="modal-submit">Submit</button>
+
+        <div class="modal-output"></div>
+    </dialog>
 
     <script src="./script.js" defer></script>
 </body>

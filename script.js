@@ -1,7 +1,7 @@
 "use strict";
 const numbersDictionary = {
     // Английский алфавит
-    "A": [{ id: 1, name: "a", vacancy: "SEO", number: "88555553535" }, { id: 1, name: "aa", vacancy: "SEOo", number: "80555553535" }],
+    "A": [{ id: 1, name: "a", vacancy: "SEO", number: "88555553535" }, { id: 2, name: "aa", vacancy: "SEOo", number: "80555553535" }, { id: 3, name: "aaron", vacancy: "SEOo", number: "80555553535" }, { id: 4, name: "aronium", vacancy: "SEOo", number: "80555553535" }, { id: 5, name: "arondy", vacancy: "SEOo", number: "80555553535" }, { id: 2, name: "aa", vacancy: "SEOo", number: "80555553535" }, { id: 2, name: "aa", vacancy: "SEOo", number: "80555553535" }, { id: 2, name: "aa", vacancy: "SEOo", number: "80555553535" }, { id: 2, name: "aa", vacancy: "SEOo", number: "80555553535" }, { id: 2, name: "aa", vacancy: "SEOo", number: "80555553535" }],
     "B": [], "C": [], "D": [], "E": [], "F": [], "G": [], "H": [], "I": [], "J": [], "K": [], "L": [], "M": [],
     "N": [], "O": [], "P": [], "Q": [], "R": [], "S": [], "T": [], "U": [], "V": [], "W": [], "X": [], "Y": [], "Z": [],
     // Русский алфавит
@@ -15,10 +15,51 @@ const vacancyInput = document.getElementById("vacancyInput");
 const numberInput = document.getElementById("numberInput");
 const addNumberButton = document.getElementById("addNumberButton");
 const clearListButton = document.getElementById("clearListButton");
+const searchButton = document.getElementById("searchNumberButton");
 const alphabet = document.querySelector(".alphabet");
 const numbersOutputContainer = document.querySelector(".numbers-output-container");
 const numbersOutputHeader = document.querySelector(".numbers-output-header");
 const numbersOutputGrid = document.querySelector(".numbers-output-grid");
+function clearInputs() {
+    nameInput.value = "";
+    vacancyInput.value = "";
+    numberInput.value = "";
+}
+function openModal(type) {
+    const modalAction = document.querySelector(".modal-action");
+    const modalNameInput = document.querySelector(".modal-name");
+    const modalVacancyInput = document.querySelector(".modal-vacancy");
+    const modalNumberInput = document.querySelector(".modal-number");
+    const modalSubmitButton = document.querySelector(".modal-submit");
+    const modalCloseButton = document.querySelector(".modal-close");
+    const modalOutput = document.querySelector(".modal-output");
+    modalCloseButton.addEventListener("click", () => {
+        document.querySelector(".modal-window").close();
+    });
+    switch (type) {
+        case "search":
+            modalAction.textContent = "Search";
+            modalNameInput.placeholder = "Name";
+            modalVacancyInput.placeholder = "Vacancy";
+            modalNumberInput.placeholder = "Number";
+            modalSubmitButton.addEventListener("click", () => {
+                let result = Object.values(numbersDictionary).flat().filter(contact => {
+                    return (modalNameInput.value === "" ? false : contact.name.toLowerCase().trim().includes(modalNameInput.value.toLowerCase().trim())) ||
+                        (modalVacancyInput.value === "" ? false : contact.vacancy.toLowerCase().trim().includes(modalVacancyInput.value.toLowerCase().trim())) ||
+                        (modalNumberInput.value === "" ? false : contact.number.toLowerCase().trim().includes(modalNumberInput.value.toLowerCase().trim()));
+                });
+                let HTML = result.map(contact => `<div><p>${contact.name}</p><p>${contact.vacancy}</p><p>${contact.number}</p></div>`);
+                modalOutput.innerHTML = HTML.join("");
+            });
+            break;
+        case "change":
+            break;
+        default:
+            let exhaustiveCheck = type;
+            break;
+    }
+    document.querySelector(".modal-window").showModal();
+}
 //Разграничить русский и английский алфавиты
 Object.entries(numbersDictionary).forEach(([key, value]) => {
     const alphabetCard = document.createElement("div");
@@ -39,7 +80,7 @@ Object.entries(numbersDictionary).forEach(([key, value]) => {
         if (e.currentTarget.lastChild?.textContent !== "0") {
             numbersOutputHeader.textContent = key;
             numbersOutputGrid.innerHTML = `
-                <h2 class="p-1 border-b-1"></h2>
+                <div></div>
                 <h4 class="p-1 border-l-1 border-b-1">Имя</h4>
                 <h4 class="p-1 border-l-1 border-b-1">Должность</h4>
                 <h4 class="p-1 border-l-1 border-b-1">Номер телефона</h4>
@@ -59,6 +100,7 @@ Object.entries(numbersDictionary).forEach(([key, value]) => {
                     number.classList.add("p-1", "border-b-1", "border-l-1");
                 }
                 else {
+                    index.classList.add("p-1");
                     name.classList.add("p-1", "border-l-1");
                     vacancy.classList.add("p-1", "border-l-1");
                     number.classList.add("p-1", "border-l-1");
@@ -74,11 +116,6 @@ Object.entries(numbersDictionary).forEach(([key, value]) => {
     // letter.addEventListener("click", () => alert(key))
     alphabet.append(alphabetCard);
 });
-function clearInputs() {
-    nameInput.value = "";
-    vacancyInput.value = "";
-    numberInput.value = "";
-}
 // Validation
 // nameInput.addEventListener("keyup")
 addNumberForm?.addEventListener("submit", (e) => {
@@ -98,3 +135,4 @@ clearListButton.addEventListener("click", () => {
     });
     numbersOutputContainer.style.display = "none";
 });
+searchButton?.addEventListener("click", () => openModal("search"));

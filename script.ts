@@ -1,17 +1,17 @@
-interface numbersDictionary {
-    [letter: string]: phoneNumber[]
+interface NumbersDictionary {
+    [letter: string]: PhoneNumber[]
 }
 
-interface phoneNumber {
+interface PhoneNumber {
     id: number;
     name: string;
     vacancy: string;
     number: string
 }
 
-const numbersDictionary: numbersDictionary = {
+const numbersDictionary: NumbersDictionary = {
     // Английский алфавит
-    "A": [{id: 1, name: "a", vacancy: "SEO", number: "88555553535"}, {id: 1, name: "aa", vacancy: "SEOo", number: "80555553535"}],
+    "A": [{id: 1, name: "a", vacancy: "SEO", number: "88555553535"}, {id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"}, {id: 3, name: "aaron", vacancy: "SEOo", number: "80555553535"}, {id: 4, name: "aronium", vacancy: "SEOo", number: "80555553535"}, {id: 5, name: "arondy", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"}],
     "B": [], "C": [], "D": [], "E": [], "F": [], "G": [], "H": [], "I": [], "J": [], "K": [], "L": [], "M": [], 
     "N": [], "O": [], "P": [], "Q": [], "R": [], "S": [], "T": [], "U": [], "V": [], "W": [], "X": [], "Y": [], "Z": [],
 
@@ -29,6 +29,7 @@ const numberInput = document.getElementById("numberInput") as HTMLInputElement;
 
 const addNumberButton = document.getElementById("addNumberButton") as HTMLButtonElement;
 const clearListButton = document.getElementById("clearListButton") as HTMLButtonElement;
+const searchButton = document.getElementById("searchNumberButton");
 
 const alphabet = document.querySelector(".alphabet") as HTMLDivElement;
 
@@ -36,7 +37,53 @@ const numbersOutputContainer = document.querySelector(".numbers-output-container
 const numbersOutputHeader = document.querySelector(".numbers-output-header") as HTMLHeadingElement;
 const numbersOutputGrid = document.querySelector(".numbers-output-grid") as HTMLDivElement;
 
-//Разграничить русский и английский алфавиты
+function clearInputs() {
+    nameInput.value = "";
+    vacancyInput.value = "";
+    numberInput.value = "";
+}
+
+function openModal(type: "search" | "change") {
+    const modalAction = document.querySelector(".modal-action") as HTMLHeadingElement;
+    const modalNameInput = document.querySelector(".modal-name") as HTMLInputElement;
+    const modalVacancyInput = document.querySelector(".modal-vacancy") as HTMLInputElement;
+    const modalNumberInput = document.querySelector(".modal-number") as HTMLInputElement;
+    const modalSubmitButton = document.querySelector(".modal-submit") as HTMLButtonElement;
+    const modalCloseButton = document.querySelector(".modal-close") as HTMLParagraphElement;
+    const modalOutput = document.querySelector(".modal-output") as HTMLDivElement;
+    
+    modalCloseButton.addEventListener("click", () => {
+        (document.querySelector(".modal-window") as HTMLDialogElement).close();
+    })
+    
+    switch (type) {
+        case "search":
+            modalAction.textContent = "Search";
+            modalNameInput.placeholder = "Name";
+            modalVacancyInput.placeholder = "Vacancy";
+            modalNumberInput.placeholder = "Number";
+            modalSubmitButton.addEventListener("click", () => {
+                let result : Array<PhoneNumber> = Object.values(numbersDictionary).flat().filter(contact => {
+                    return (modalNameInput.value === "" ? false : contact.name.toLowerCase().trim().includes(modalNameInput.value.toLowerCase().trim())) || 
+                    (modalVacancyInput.value === "" ? false : contact.vacancy.toLowerCase().trim().includes(modalVacancyInput.value.toLowerCase().trim())) ||
+                    (modalNumberInput.value === "" ? false : contact.number.toLowerCase().trim().includes(modalNumberInput.value.toLowerCase().trim()));
+                });
+                let HTML = result.map(contact => `<div><p>${contact.name}</p><p>${contact.vacancy}</p><p>${contact.number}</p></div>`)
+                modalOutput.innerHTML = HTML.join("");
+            });
+            break;
+        case "change":
+                
+            break;
+        default:
+            let exhaustiveCheck : never = type;
+            break;
+        }
+
+    (document.querySelector(".modal-window") as HTMLDialogElement).showModal()
+}
+            
+            //Разграничить русский и английский алфавиты
 Object.entries(numbersDictionary).forEach(([key, value]) => {
     const alphabetCard : HTMLDivElement = document.createElement("div");
     alphabetCard.classList.add("alphabet-card");
@@ -60,7 +107,7 @@ Object.entries(numbersDictionary).forEach(([key, value]) => {
             numbersOutputHeader.textContent = key;
 
             numbersOutputGrid.innerHTML = `
-                <h2 class="p-1 border-b-1"></h2>
+                <div></div>
                 <h4 class="p-1 border-l-1 border-b-1">Имя</h4>
                 <h4 class="p-1 border-l-1 border-b-1">Должность</h4>
                 <h4 class="p-1 border-l-1 border-b-1">Номер телефона</h4>
@@ -105,12 +152,6 @@ Object.entries(numbersDictionary).forEach(([key, value]) => {
 })
 
 
-function clearInputs() {
-    nameInput.value = "";
-    vacancyInput.value = "";
-    numberInput.value = "";
-}
-
 // Validation
 // nameInput.addEventListener("keyup")
 
@@ -135,3 +176,5 @@ clearListButton.addEventListener("click", () => {
     })
     numbersOutputContainer.style.display = "none";
 });
+
+searchButton?.addEventListener("click", () => openModal("search"));
