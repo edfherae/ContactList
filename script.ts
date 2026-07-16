@@ -1,15 +1,12 @@
+import Contact from "./models/Contact.ts"
+
 interface NumbersDictionary {
-    data : { [letter: string]: PhoneNumber[] },
-    getContactById : (id : number) => PhoneNumber,
+    data : { [letter: string]: Contact[] },
+    getContactById : (id : number) => Contact,
     deleteContact : (id : number, letter : string) => void
 }
 
-interface PhoneNumber {
-    id: number;
-    name: string;
-    vacancy: string;
-    number: string
-}
+
 
 const numbersDictionary: NumbersDictionary = {
     // Английский алфавит
@@ -74,7 +71,7 @@ function openModal(type: "search" | "change") {
             modalNumberInput.placeholder = "Number";
 
             modalSubmitButton.addEventListener("click", () => {
-                let result : Array<PhoneNumber> = Object.values(numbersDictionary).flat().filter(contact => {
+                let result : Array<Contact> = Object.values(numbersDictionary).flat().filter(contact => {
                     return (modalNameInput.value === "" ? false : contact.name.toLowerCase().trim().includes(modalNameInput.value.toLowerCase().trim())) || 
                     (modalVacancyInput.value === "" ? false : contact.vacancy.toLowerCase().trim().includes(modalVacancyInput.value.toLowerCase().trim())) ||
                     (modalNumberInput.value === "" ? false : contact.number.toLowerCase().trim().includes(modalNumberInput.value.toLowerCase().trim()));
