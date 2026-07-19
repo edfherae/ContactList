@@ -12,13 +12,14 @@
     </nav>
 
     <div>
-        <form id="addNumberForm">
-            <input type="text" name="" id="nameInput" placeholder="Name" required minlength="2">
-            <input type="text" name="" id="vacancyInput" placeholder="Vacancy" required minlength="2">
-            <input type="tel" name="" id="numberInput" placeholder="Number: 88005553535" required pattern="[0-9]{11}">
+        <form class="add-number-form">
+            <input type="text" name="" class="name-input" placeholder="Name" required minlength="2">
+            <input type="text" name="" class="vacancy-input" placeholder="Vacancy" required minlength="2">
+            <input type="tel" name="" class="number-input" placeholder="Number: 88005553535" required pattern="[0-9]{11}">
 
-            <button id="addNumberButton" type="submit">Add</button>
+            <button class="add-number-button" type="submit">Add</button>
         </form>
+
         <button id="clearListButton">Clear list</button>
         <button id="searchNumberButton">Search</button>
     </div>
@@ -29,10 +30,10 @@
     </div>
 
     <div class="numbers-output-container">
-        <h1 class="numbers-output-header"></h1>
+        <!-- <h1 class="numbers-output-header"></h1>
         <div class="numbers-output-grid">
-            <!-- Выгрузка номеров по нажатию -->
-        </div>
+            Выгрузка номеров по нажатию
+        </div> -->
     </div>
 
     <!-- <div class="modal-container">
@@ -54,6 +55,6 @@
         <div class="modal-output"></div>
     </dialog>
 
-    <script src="./script.js" defer></script>
+    <script type="module" src="./build/script.js" defer></script>
 </body>
 </html>

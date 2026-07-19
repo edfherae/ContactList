@@ -1,202 +1,86 @@
-import Contact from "./models/Contact.ts"
+import Contact from "./models/Contact.js";
 
-interface NumbersDictionary {
-    data : { [letter: string]: Contact[] },
-    getContactById : (id : number) => Contact,
-    deleteContact : (id : number, letter : string) => void
-}
+import { createContactStore } from "./services/createContactStore.js";
+import { Alphabet } from "./components/Alphabet.js";
+import { ContactList } from "./components/ContactList.js";
+import { AddNumberForm } from "./components/AddNumberForm.js";
+import { SearchModal } from "./components/searchModal.js";
 
+const contactStore = createContactStore(
+    [
+        {id: 3, name: "bob", vacancy: "DevOps", phoneNumber: "01023336667"},
+        {id: 1, name: "a", vacancy: "SEO", phoneNumber: "88005553535"},
+        {id: 2, name: "aaron", vacancy: "Developer", phoneNumber: "87021114455"},
+    ]
+);
 
-
-const numbersDictionary: NumbersDictionary = {
-    // Английский алфавит
-    data : {
-        "A": [{id: 1, name: "a", vacancy: "SEO", number: "88555553535"}, {id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"}, {id: 3, name: "aaron", vacancy: "SEOo", number: "80555553535"}, {id: 4, name: "aronium", vacancy: "SEOo", number: "80555553535"}, {id: 5, name: "arondy", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"},{id: 2, name: "aa", vacancy: "SEOo", number: "80555553535"}],
-        "B": [], "C": [], "D": [], "E": [], "F": [], "G": [], "H": [], "I": [], "J": [], "K": [], "L": [], "M": [], 
-        "N": [], "O": [], "P": [], "Q": [], "R": [], "S": [], "T": [], "U": [], "V": [], "W": [], "X": [], "Y": [], "Z": [],
-
-        // Русский алфавит
-        "А": [], "Б": [], "В": [], "Г": [], "Д": [], "Е": [], "Ё": [], "Ж": [], "З": [], "И": [], "Й": [], "К": [], 
-        "Л": [], "М": [], "Н": [], "О": [], "П": [], "Р": [], "С": [], "Т": [], "У": [], "Ф": [], "Х": [], "Ц": [], 
-        "Ч": [], "Ш": [], "Щ": [], "Ъ": [], "Ы": [], "Ь": [], "Э": [], "Ю": [], "Я": []
-    },
-    getContactById(id : number) {
-        return Object.values(this.data).flat().filter(contact => contact.id !== id)[0]
-    },
-    deleteContact(id : number, letter : string) {
-        this.data[letter] = this.data[letter].filter(contact => contact.id !== id); 
-    }
-};
-
-const addNumberForm = document.getElementById("addNumberForm") as HTMLFormElement;
-
-const nameInput = document.getElementById("nameInput") as HTMLInputElement;
-const vacancyInput = document.getElementById("vacancyInput") as HTMLInputElement;
-const numberInput = document.getElementById("numberInput") as HTMLInputElement;
-
-const addNumberButton = document.getElementById("addNumberButton") as HTMLButtonElement;
+const alphabet = new Alphabet(document.querySelector(".alphabet") as HTMLDivElement);
+const contactList = new ContactList(document.querySelector(".numbers-output-container") as HTMLDivElement);
+const addNumberForm = new AddNumberForm(
+    document.querySelector(".add-number-form") as HTMLFormElement, 
+    document.querySelector(".name-input") as HTMLInputElement, 
+    document.querySelector(".vacancy-input") as HTMLInputElement, 
+    document.querySelector(".number-input") as HTMLInputElement,
+    document.querySelector(".add-number-button") as HTMLButtonElement, 
+    onFormSubmit
+);
 const clearListButton = document.getElementById("clearListButton") as HTMLButtonElement;
 const searchButton = document.getElementById("searchNumberButton");
+const searchModal = new SearchModal(
+    document.querySelector(".modal-window") as HTMLDialogElement,
+    document.querySelector(".modal-action") as HTMLHeadingElement, 
+    document.querySelector(".modal-name") as HTMLInputElement, 
+    document.querySelector(".modal-vacancy") as HTMLInputElement, 
+    document.querySelector(".modal-number") as HTMLInputElement, 
+    document.querySelector(".modal-submit") as HTMLButtonElement,
+    document.querySelector(".modal-close") as HTMLParagraphElement,
+    document.querySelector(".modal-output") as HTMLDivElement,
+    contactStore.searchContacts
+);
+searchButton?.addEventListener("click", () => searchModal.open());
+// (document.querySelector(".modal-window") as HTMLDialogElement).showModal()
 
-const alphabet = document.querySelector(".alphabet") as HTMLDivElement;
-
-const numbersOutputContainer = document.querySelector(".numbers-output-container") as HTMLDivElement;
-const numbersOutputHeader = document.querySelector(".numbers-output-header") as HTMLHeadingElement;
-const numbersOutputGrid = document.querySelector(".numbers-output-grid") as HTMLDivElement;
-
-function clearInputs() {
-    nameInput.value = "";
-    vacancyInput.value = "";
-    numberInput.value = "";
+function onLetterSelect(letter : string) {
+    contactList.render(letter, contactStore.getContactsByLetter(letter));
 }
 
-function openModal(type: "search" | "change") {
-    const modalAction = document.querySelector(".modal-action") as HTMLHeadingElement;
-    const modalNameInput = document.querySelector(".modal-name") as HTMLInputElement;
-    const modalVacancyInput = document.querySelector(".modal-vacancy") as HTMLInputElement;
-    const modalNumberInput = document.querySelector(".modal-number") as HTMLInputElement;
-    const modalSubmitButton = document.querySelector(".modal-submit") as HTMLButtonElement;
-    const modalCloseButton = document.querySelector(".modal-close") as HTMLParagraphElement;
-    const modalOutput = document.querySelector(".modal-output") as HTMLDivElement;
-    
-    modalCloseButton.addEventListener("click", () => {
-        (document.querySelector(".modal-window") as HTMLDialogElement).close();
-    })
-    
-    switch (type) {
-        case "search":
-            modalAction.textContent = "Search";
-            modalNameInput.placeholder = "Name";
-            modalVacancyInput.placeholder = "Vacancy";
-            modalNumberInput.placeholder = "Number";
+function onFormSubmit(contact : Contact) {
+    contactStore.addContact(contact);
+    alphabet.render(contactStore.getLettersCount(), onLetterSelect);
 
-            modalSubmitButton.addEventListener("click", () => {
-                let result : Array<Contact> = Object.values(numbersDictionary).flat().filter(contact => {
-                    return (modalNameInput.value === "" ? false : contact.name.toLowerCase().trim().includes(modalNameInput.value.toLowerCase().trim())) || 
-                    (modalVacancyInput.value === "" ? false : contact.vacancy.toLowerCase().trim().includes(modalVacancyInput.value.toLowerCase().trim())) ||
-                    (modalNumberInput.value === "" ? false : contact.number.toLowerCase().trim().includes(modalNumberInput.value.toLowerCase().trim()));
-                });
-
-                let HTML = result.map(contact => `
-                    <div>
-                        <p>${contact.name}</p><p>${contact.vacancy}</p><p>${contact.number}</p>
-                        <button onclick="openChangeModal(${contact.id})">Change</button>
-                        <button onclick="deleteContact(${contact.id}, ${contact.name[0]})">Delete</button>
-                    </div>`)
-                modalOutput.innerHTML = HTML.join("");
-                //добавить кнопки изменения и удаления
-                //контакты хранить в массиве, перерисовывать при изменении
-                //выводить их в инпутах, разблокировать при изменении, кнопку менять на submit
-                //менять в основном списке по id
-            });
-            break;
-        case "change":
-                
-            break;
-        default:
-            let exhaustiveCheck : never = type;
-            break;
-        }
-
-    (document.querySelector(".modal-window") as HTMLDialogElement).showModal()
+    const firstLetter = contact.name[0].toUpperCase();
+    if(firstLetter === contactList.currentLetter) contactList.render(firstLetter, contactStore.getContactsByLetter(firstLetter))
 }
-
-function openChangeModal(id: string) {
-
-}
-            
-//Разграничить русский и английский алфавиты
-Object.entries(numbersDictionary).forEach(([key, value]) => {
-    const alphabetCard : HTMLDivElement = document.createElement("div");
-    alphabetCard.classList.add("alphabet-card");
-    alphabetCard.id = key;
-
-    const letter : HTMLDivElement = document.createElement("div");
-    letter.textContent = key;
-    alphabetCard.append(letter);
-
-    const count : HTMLDivElement = document.createElement("div");
-    count.classList.add("count");
-    count.textContent = `${value.length}`;
-    alphabetCard.append(count);
-
-    alphabetCard.addEventListener("click", (e) => {
-        // const letter : HTMLDivElement = document.createElement("div");
-        // letter.textContent = key;
-        // letter.classList.add("alphabet-card")
-        // numbersOutput.append(letter); 
-        if((e.currentTarget as HTMLDivElement).lastChild?.textContent !== "0") {
-            numbersOutputHeader.textContent = key;
-
-            numbersOutputGrid.innerHTML = `
-                <div></div>
-                <h4 class="p-1 border-l-1 border-b-1">Имя</h4>
-                <h4 class="p-1 border-l-1 border-b-1">Должность</h4>
-                <h4 class="p-1 border-l-1 border-b-1">Номер телефона</h4>
-            `;
-
-            Object.values(numbersDictionary.data[key]).forEach((el, i, arr)  => {
-                const numberCard : HTMLDivElement = document.createElement("div");
-                numberCard.classList.add("number-card");
-
-                const [index, name, vacancy, number] = [document.createElement("p"), document.createElement("p"), document.createElement("p"), document.createElement("p")];
-                index.textContent = `${i + 1}.`; 
-                name.textContent = el.name; 
-                vacancy.textContent = el.vacancy; 
-                number.textContent = el.number;
-
-                if(!((i + 1) === arr.length)) {
-                    index.classList.add("p-1", "border-b-1");
-                    name.classList.add("p-1", "border-b-1", "border-l-1");
-                    vacancy.classList.add("p-1", "border-b-1", "border-l-1");
-                    number.classList.add("p-1", "border-b-1" ,"border-l-1");
-                } else {
-                    index.classList.add("p-1");
-                    name.classList.add("p-1", "border-l-1");
-                    vacancy.classList.add("p-1", "border-l-1");
-                    number.classList.add("p-1", "border-l-1");
-                }
-                // numberCard.append(name, vacancy, number);
-
-                // numbersOutput.append(numberCard);
-                numbersOutputGrid.append(index, name, vacancy, number);
-            });
-
-            console.log(numbersOutputContainer.style.display);
-            numbersOutputContainer.style.display = "flex";
-        } 
-
-        
-    });
-
-    // letter.addEventListener("click", () => alert(key))
-    alphabet.append(alphabetCard);
-})
-
-
-// Validation
-// nameInput.addEventListener("keyup")
-
-addNumberForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if(addNumberForm.reportValidity()) {
-        const currentLetter : string = nameInput.value[0].toUpperCase();
-        numbersDictionary.data[currentLetter].push({id: Date.now(), name: nameInput.value, vacancy: vacancyInput.value, number: numberInput.value});
-
-        console.log(numbersDictionary.data[currentLetter]);
-
-        (document.getElementById(currentLetter)?.lastChild as HTMLDivElement).textContent = `${numbersDictionary.data[currentLetter].length}`
-        
-        clearInputs();
-    }
-});
 
 clearListButton.addEventListener("click", () => {
-    Object.keys(numbersDictionary).forEach((letter) => {
-        numbersDictionary.data[letter] = [];
-        (document.getElementById(letter)?.lastChild as HTMLDivElement).textContent = "0";
-    })
-    numbersOutputContainer.style.display = "none";
+    contactStore.clear();
+    contactList.clear();
+    alphabet.render(contactStore.getLettersCount(), onLetterSelect);
 });
 
-searchButton?.addEventListener("click", () => openModal("search"));
+
+alphabet.render(contactStore.getLettersCount(), onLetterSelect);
+
+
+
+
+
+/////////////////////////////////////
+
+
+
+
+// const numbersOutputContainer = document.querySelector(".numbers-output-container") as HTMLDivElement;
+// const numbersOutputHeader = document.querySelector(".numbers-output-header") as HTMLHeadingElement;
+// const numbersOutputGrid = document.querySelector(".numbers-output-grid") as HTMLDivElement;
+
+
+
+
+
+// function openChangeModal(id: string) {
+
+// }
+            
+// // Validation
+// // nameInput.addEventListener("keyup")
