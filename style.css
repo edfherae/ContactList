@@ -26,7 +26,7 @@
     margin-left: 10px;
     margin-right: 10px;
     border-bottom: 1px solid black;
-    background-color: darkgrey;
+    background-color: rgb(219, 219, 219);
     display: flex;
     justify-content: space-evenly;
 }
@@ -41,7 +41,7 @@
     justify-items: center;
     align-items: center;
 
-    background-color: darkgrey;
+    background-color: rgb(219, 219, 219);
     border-radius: 15px;
 }
 

@@ -4,16 +4,20 @@ import { ContactList } from "./components/ContactList.js";
 import { AddNumberForm } from "./components/AddNumberForm.js";
 import { SearchModal } from "./components/searchModal.js";
 import { ChangeModal } from "./components/changeModal.js";
-const contactStore = createContactStore([
-    { id: 3, name: "bob", vacancy: "DevOps", phoneNumber: "01023336667" },
-    { id: 1, name: "a", vacancy: "SEO", phoneNumber: "88005553535" },
-    { id: 2, name: "aaron", vacancy: "Developer", phoneNumber: "87021114455" },
-]);
-const alphabet = new Alphabet(document.querySelector(".alphabet"));
-const contactList = new ContactList(document.querySelector(".numbers-output-container"), openChangeModal, onContactDelete, (letter) => contactStore.getContactsByLetter(letter));
+const localStorageData = localStorage.getItem("data");
+const contactStore = createContactStore(localStorageData ? JSON.parse(localStorageData) : []);
 const addNumberForm = new AddNumberForm(document.querySelector(".add-number-form"), document.querySelector(".name-input"), document.querySelector(".vacancy-input"), document.querySelector(".number-input"), document.querySelector(".add-number-button"), onFormSubmit);
 const clearListButton = document.getElementById("clearListButton");
+clearListButton.addEventListener("click", () => {
+    contactStore.clear();
+    contactList.clear();
+    alphabet.render(contactStore.getLettersCount(), onLetterSelect);
+});
 const searchButton = document.getElementById("searchNumberButton");
+searchButton === null || searchButton === void 0 ? void 0 : searchButton.addEventListener("click", () => searchModal.open());
+const alphabet = new Alphabet(document.querySelector(".alphabet"));
+const contactList = new ContactList(document.querySelector(".numbers-output-container"), openChangeModal, deleteContact, (letter) => contactStore.getContactsByLetter(letter));
+const searchModal = new SearchModal(document.querySelector(".modal-window"), document.querySelector(".modal-action"), document.querySelector(".modal-name"), document.querySelector(".modal-vacancy"), document.querySelector(".modal-number"), document.querySelector(".modal-submit"), document.querySelector(".modal-close"), document.querySelector(".modal-output"), contactStore.searchContacts, openChangeModal, deleteContact);
 const changeModal = new ChangeModal(changeContact);
 function changeContact(contact) {
     contactStore.changeContact(contact);
@@ -21,7 +25,7 @@ function changeContact(contact) {
     //contactList.render(contactList.currentLetter, contactStore.getContactsByLetter(letter));
     alphabet.render(contactStore.getLettersCount(), onLetterSelect);
 }
-// поиск по айди от searchModal контакта и передача его в changeModal
+// поиск контакта по айди от searchModal и передача его в changeModal
 function openChangeModal(id, rerenderComponent) {
     const contact = contactStore.getContactById(id);
     if (contact)
@@ -29,10 +33,7 @@ function openChangeModal(id, rerenderComponent) {
     else
         alert("не найден такой контакт в базе");
 }
-const searchModal = new SearchModal(document.querySelector(".modal-window"), document.querySelector(".modal-action"), document.querySelector(".modal-name"), document.querySelector(".modal-vacancy"), document.querySelector(".modal-number"), document.querySelector(".modal-submit"), document.querySelector(".modal-close"), document.querySelector(".modal-output"), contactStore.searchContacts, openChangeModal, onContactDelete);
-searchButton === null || searchButton === void 0 ? void 0 : searchButton.addEventListener("click", () => searchModal.open());
-// (document.querySelector(".modal-window") as HTMLDialogElement).showModal()
-function onContactDelete(id) {
+function deleteContact(id) {
     contactStore.deleteContact(id);
     // if is active
     //contactList.render(contactList.currentLetter, contactStore.getContactsByLetter(letter));
@@ -48,9 +49,7 @@ function onFormSubmit(contact) {
     if (firstLetter === contactList.currentLetter)
         contactList.render(firstLetter, contactStore.getContactsByLetter(firstLetter));
 }
-clearListButton.addEventListener("click", () => {
-    contactStore.clear();
-    contactList.clear();
-    alphabet.render(contactStore.getLettersCount(), onLetterSelect);
-});
 alphabet.render(contactStore.getLettersCount(), onLetterSelect);
+window.addEventListener("pagehide", () => {
+    localStorage.setItem("data", JSON.stringify(contactStore.getAllContacts()));
+});
