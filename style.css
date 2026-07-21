@@ -17,119 +17,14 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    height: 350px;
+    height: 150px;
 }
 
-.alphabet-card {
+.letter {
     width: 100px;
     height: 25px;
-    margin-left: 10px;
-    margin-right: 10px;
-    border-bottom: 1px solid black;
-    background-color: rgb(219, 219, 219);
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.numbers-output-container {
-    width: 80vw;
-    margin: auto;
-    margin-top: 1rem;
-    /* margin: auto 0 auto 1rem; */
-    display: none;
-    flex-direction: column;
-    justify-items: center;
-    align-items: center;
-
-    background-color: rgb(219, 219, 219);
-    border-radius: 15px;
-}
-
-.numbers-output-header {
-    text-align: center;
-    width: 90%;
-    border-bottom: 1px solid black;
-    /* margin-bottom: 1rem; */
-}
-
-.numbers-output-grid {
-    display: grid;
-    width: fit-content;
-    grid-template-columns: repeat(5, 100px);
-    grid-auto-rows: minmax(100px, auto);
-    padding-bottom: 1rem;
-}
-
-.number-card {
-    width: 600px;
-    height: 25px;
-    margin-left: 10px;
-    margin-right: 10px;
     border-bottom: 1px solid black;
     background-color: darkgrey;
-    display: flex;
-    justify-content: center;
-    
-    grid-column: span 4;
-}
-
-.number-card > p {
-    padding-right: 1rem;
-}
-
-.border-l-1 {
-    border-left: 1px solid black;
-}
-
-.border-b-1 {
-    border-bottom: 1px solid black;
-}
-
-.p-1 {
-    padding: 0.25rem;
-}
-
-.modal-window {
-  width: 90%;
-  max-width: 700px;
-  padding: 24px;
-  background-color: #ffffff;
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  margin: auto; 
-}
-
-.modal-window::backdrop {
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
-}
-
-.modal-input-container {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.modal-input-container > input {
-    height: 30px;
-    margin-right: 0.5rem;
-}
-
-.modal-close {
-    font-family: sans-serif;
-    cursor: pointer;
-}
-
-.d-flex {
-    display: flex;
-}
-
-.justify-content-between {
-    justify-content: space-between;
-}
-
-.items-center {
-    align-items: center;
+    text-align: center;
+    vertical-align: text-bottom;
 }

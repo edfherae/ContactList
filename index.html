@@ -12,49 +12,19 @@
     </nav>
 
     <div>
-        <form class="add-number-form">
-            <input type="text" name="" class="name-input" placeholder="Name" required minlength="2">
-            <input type="text" name="" class="vacancy-input" placeholder="Vacancy" required minlength="2">
-            <input type="tel" name="" class="number-input" placeholder="Number: 88005553535" required pattern="[0-9]{11}">
+        <input type="text" name="" id="nameInput" placeholder="Name">
+        <input type="text" name="" id="vacancyInput" placeholder="Vacancy">
+        <input type="tel" name="" id="numberInput" placeholder="Phone number">
 
-            <button class="add-number-button" type="submit">Add</button>
-            <button id="clearListButton" type="button">Clear list</button>
-            <button id="searchNumberButton" type="button">Search</button>
-        </form>
-
+        <button id="addNumberButton">Add</button>
+        <button>Clear list</button>
+        <button>Search</button>
     </div>
-    
 
     <div class="alphabet">
-        <!-- Сюда выгружается алфавит -->
+        <!-- Сюда выгружать мапу -->
     </div>
 
-    <div class="numbers-output-container">
-        <!-- <h1 class="numbers-output-header"></h1>
-        <div class="numbers-output-grid">
-            Выгрузка номеров по нажатию
-        </div> -->
-    </div>
-
-    <!-- <div class="modal-container">
-        <div class="modal-window"></div>
-    </div> -->
-    <dialog class="modal-window">
-        <div style="display: flex; justify-content: space-between;">
-            <h2 class="modal-action"></h2>
-            <p class="modal-close">X</p>
-        </div>
-        <div class="modal-input-container">
-            <input class="modal-name" type="text">
-            <input class="modal-vacancy" type="text">
-            <input class="modal-number" type="text">
-        </div>
-
-        <button class="modal-submit">Submit</button>
-
-        <div class="modal-output"></div>
-    </dialog>
-
-    <script type="module" src="./build/script.js" defer></script>
+    <script src="./script.js" defer></script>
 </body>
 </html>
