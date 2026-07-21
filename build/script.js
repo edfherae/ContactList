@@ -10,7 +10,7 @@ const contactStore = createContactStore([
     { id: 2, name: "aaron", vacancy: "Developer", phoneNumber: "87021114455" },
 ]);
 const alphabet = new Alphabet(document.querySelector(".alphabet"));
-const contactList = new ContactList(document.querySelector(".numbers-output-container"));
+const contactList = new ContactList(document.querySelector(".numbers-output-container"), openChangeModal, onContactDelete, (letter) => contactStore.getContactsByLetter(letter));
 const addNumberForm = new AddNumberForm(document.querySelector(".add-number-form"), document.querySelector(".name-input"), document.querySelector(".vacancy-input"), document.querySelector(".number-input"), document.querySelector(".add-number-button"), onFormSubmit);
 const clearListButton = document.getElementById("clearListButton");
 const searchButton = document.getElementById("searchNumberButton");
@@ -22,16 +22,22 @@ function changeContact(contact) {
     alphabet.render(contactStore.getLettersCount(), onLetterSelect);
 }
 // поиск по айди от searchModal контакта и передача его в changeModal
-function openChangeModal(id) {
+function openChangeModal(id, rerenderComponent) {
     const contact = contactStore.getContactById(id);
     if (contact)
-        changeModal.open(contact);
+        changeModal.open(contact, () => rerenderComponent());
     else
         alert("не найден такой контакт в базе");
 }
-const searchModal = new SearchModal(document.querySelector(".modal-window"), document.querySelector(".modal-action"), document.querySelector(".modal-name"), document.querySelector(".modal-vacancy"), document.querySelector(".modal-number"), document.querySelector(".modal-submit"), document.querySelector(".modal-close"), document.querySelector(".modal-output"), contactStore.searchContacts, openChangeModal);
+const searchModal = new SearchModal(document.querySelector(".modal-window"), document.querySelector(".modal-action"), document.querySelector(".modal-name"), document.querySelector(".modal-vacancy"), document.querySelector(".modal-number"), document.querySelector(".modal-submit"), document.querySelector(".modal-close"), document.querySelector(".modal-output"), contactStore.searchContacts, openChangeModal, onContactDelete);
 searchButton === null || searchButton === void 0 ? void 0 : searchButton.addEventListener("click", () => searchModal.open());
 // (document.querySelector(".modal-window") as HTMLDialogElement).showModal()
+function onContactDelete(id) {
+    contactStore.deleteContact(id);
+    // if is active
+    //contactList.render(contactList.currentLetter, contactStore.getContactsByLetter(letter));
+    alphabet.render(contactStore.getLettersCount(), onLetterSelect);
+}
 function onLetterSelect(letter) {
     contactList.render(letter, contactStore.getContactsByLetter(letter));
 }
@@ -48,11 +54,3 @@ clearListButton.addEventListener("click", () => {
     alphabet.render(contactStore.getLettersCount(), onLetterSelect);
 });
 alphabet.render(contactStore.getLettersCount(), onLetterSelect);
-/////////////////////////////////////
-// const numbersOutputContainer = document.querySelector(".numbers-output-container") as HTMLDivElement;
-// const numbersOutputHeader = document.querySelector(".numbers-output-header") as HTMLHeadingElement;
-// const numbersOutputGrid = document.querySelector(".numbers-output-grid") as HTMLDivElement;
-// function openChangeModal(id: string) {
-// }
-// // Validation
-// // nameInput.addEventListener("keyup")

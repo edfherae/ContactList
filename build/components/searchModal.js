@@ -1,5 +1,5 @@
 export class SearchModal {
-    constructor(modalWindow, modalAction, modalNameInput, modalVacancyInput, modalNumberInput, modalSubmitButton, modalCloseButton, modalOutput, searchContacts, openChangeModal) {
+    constructor(modalWindow, modalAction, modalNameInput, modalVacancyInput, modalNumberInput, modalSubmitButton, modalCloseButton, modalOutput, searchContacts, openChangeModal, deleteContact) {
         this.modalWindow = modalWindow;
         this.modalAction = modalAction;
         this.modalNameInput = modalNameInput;
@@ -10,6 +10,7 @@ export class SearchModal {
         this.modalOutput = modalOutput;
         this.searchContacts = searchContacts;
         this.openChangeModal = openChangeModal;
+        this.deleteContact = deleteContact;
     }
     open() {
         this.modalCloseButton.addEventListener("click", () => this.modalWindow.close());
@@ -44,10 +45,21 @@ export class SearchModal {
             p_2.textContent = contact.phoneNumber;
             const buttonChange = document.createElement("button");
             buttonChange.textContent = "Change";
-            buttonChange.addEventListener("click", () => this.openChangeModal(contact.id));
-            const buttonSearch = document.createElement("button");
-            div.append(p_1, p_2, p_3, buttonChange, buttonSearch);
+            buttonChange.addEventListener("click", () => this.onContactChange(contact.id));
+            const buttonDelete = document.createElement("button");
+            buttonDelete.textContent = "Delete";
+            buttonDelete.addEventListener("click", () => this.onContactDelete(contact.id));
+            div.append(p_1, p_2, p_3, buttonChange, buttonDelete);
             this.modalOutput.append(div);
         });
+    }
+    onContactChange(id) {
+        this.openChangeModal(id, () => {
+            this.render();
+        });
+    }
+    onContactDelete(id) {
+        this.deleteContact(id);
+        this.render();
     }
 }

@@ -16,7 +16,7 @@ const contactStore = createContactStore(
 );
 
 const alphabet = new Alphabet(document.querySelector(".alphabet") as HTMLDivElement);
-const contactList = new ContactList(document.querySelector(".numbers-output-container") as HTMLDivElement);
+const contactList = new ContactList(document.querySelector(".numbers-output-container") as HTMLDivElement, openChangeModal, onContactDelete, (letter) => contactStore.getContactsByLetter(letter));
 const addNumberForm = new AddNumberForm(
     document.querySelector(".add-number-form") as HTMLFormElement, 
     document.querySelector(".name-input") as HTMLInputElement, 
@@ -37,9 +37,9 @@ function changeContact(contact : Contact) {
 }
 
 // поиск по айди от searchModal контакта и передача его в changeModal
-function openChangeModal(id: number) {
+function openChangeModal(id: number, rerenderComponent: () => void) {
     const contact = contactStore.getContactById(id);
-    if(contact) changeModal.open(contact);
+    if(contact) changeModal.open(contact, () => rerenderComponent());
     else alert("не найден такой контакт в базе")
 }
 
@@ -53,10 +53,19 @@ const searchModal = new SearchModal(
     document.querySelector(".modal-close") as HTMLParagraphElement,
     document.querySelector(".modal-output") as HTMLDivElement,
     contactStore.searchContacts,
-    openChangeModal
+    openChangeModal,
+    onContactDelete
 );
 searchButton?.addEventListener("click", () => searchModal.open());
 // (document.querySelector(".modal-window") as HTMLDialogElement).showModal()
+
+function onContactDelete(id: number) {
+    contactStore.deleteContact(id);
+
+    // if is active
+    //contactList.render(contactList.currentLetter, contactStore.getContactsByLetter(letter));
+    alphabet.render(contactStore.getLettersCount(), onLetterSelect);
+}
 
 function onLetterSelect(letter : string) {
     contactList.render(letter, contactStore.getContactsByLetter(letter));
@@ -76,29 +85,4 @@ clearListButton.addEventListener("click", () => {
     alphabet.render(contactStore.getLettersCount(), onLetterSelect);
 });
 
-
 alphabet.render(contactStore.getLettersCount(), onLetterSelect);
-
-
-
-
-
-/////////////////////////////////////
-
-
-
-
-// const numbersOutputContainer = document.querySelector(".numbers-output-container") as HTMLDivElement;
-// const numbersOutputHeader = document.querySelector(".numbers-output-header") as HTMLHeadingElement;
-// const numbersOutputGrid = document.querySelector(".numbers-output-grid") as HTMLDivElement;
-
-
-
-
-
-// function openChangeModal(id: string) {
-
-// }
-            
-// // Validation
-// // nameInput.addEventListener("keyup")

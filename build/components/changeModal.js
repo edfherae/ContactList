@@ -1,5 +1,6 @@
 export class ChangeModal {
     constructor(onContactChange) {
+        this.rerenderComponent = null;
         this.container = document.createElement("dialog");
         this.container.classList.add("modal-window");
         this.form = document.createElement("form");
@@ -34,16 +35,19 @@ export class ChangeModal {
         this.onContactChange = onContactChange;
         this.currentContact = null;
     }
-    open(contact) {
+    open(contact, rerenderComponent) {
         this.currentContact = contact;
         this.nameField.value = contact.name;
         this.vacancyField.value = contact.vacancy;
         this.phoneNumberField.value = contact.phoneNumber;
+        this.rerenderComponent = rerenderComponent;
         this.container.showModal();
     }
     onSubmit() {
+        var _a;
         if (this.currentContact)
             this.onContactChange({ id: this.currentContact.id, name: this.nameField.value, vacancy: this.vacancyField.value, phoneNumber: this.phoneNumberField.value });
+        (_a = this.rerenderComponent) === null || _a === void 0 ? void 0 : _a.call(this);
         this.close();
     }
     close() {

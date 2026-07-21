@@ -10,7 +10,8 @@ export class SearchModal {
     private modalCloseButton : HTMLParagraphElement;
     private modalOutput : HTMLDivElement;
     searchContacts : (name: string, vacancy: string, phoneNumber: string) => Contact[];
-    openChangeModal : (id: number) => void;
+    openChangeModal : (id: number, rerenderComponent : () => void) => void;
+    deleteContact : (id: number) => void;
 
     constructor(
         modalWindow : HTMLDialogElement,
@@ -22,7 +23,8 @@ export class SearchModal {
         modalCloseButton : HTMLParagraphElement, 
         modalOutput : HTMLDivElement,
         searchContacts : (name: string, vacancy: string, phoneNumber: string) => Contact[],
-        openChangeModal : (id: number) => void,
+        openChangeModal : (id: number, rerenderComponent : () => void) => void,
+        deleteContact : (id: number) => void,
     ) {
         this.modalWindow = modalWindow;
         this.modalAction = modalAction;
@@ -34,6 +36,7 @@ export class SearchModal {
         this.modalOutput = modalOutput;
         this.searchContacts = searchContacts;
         this.openChangeModal = openChangeModal;
+        this.deleteContact = deleteContact;
     }
 
     open() {
@@ -77,11 +80,22 @@ export class SearchModal {
             p_2.textContent = contact.phoneNumber
             const buttonChange = document.createElement("button");
             buttonChange.textContent = "Change";
-            buttonChange.addEventListener("click", () => this.openChangeModal(contact.id));
-            const buttonSearch = document.createElement("button");
+            buttonChange.addEventListener("click", () => this.onContactChange(contact.id));
+            const buttonDelete = document.createElement("button");
+            buttonDelete.textContent = "Delete";
+            buttonDelete.addEventListener("click", () => this.onContactDelete(contact.id))
 
-            div.append(p_1, p_2, p_3, buttonChange, buttonSearch);
+            div.append(p_1, p_2, p_3, buttonChange, buttonDelete);
             this.modalOutput.append(div);
         });
+    }
+    onContactChange(id: number) {
+        this.openChangeModal(id, () => {
+            this.render();
+        });
+    }
+    onContactDelete(id: number) {
+        this.deleteContact(id);
+        this.render()
     }
 }

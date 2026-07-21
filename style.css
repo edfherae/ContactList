@@ -55,7 +55,7 @@
 .numbers-output-grid {
     display: grid;
     width: fit-content;
-    grid-template-columns: repeat(4, 100px);
+    grid-template-columns: repeat(5, 100px);
     grid-auto-rows: minmax(100px, auto);
     padding-bottom: 1rem;
 }
@@ -69,6 +69,8 @@
     background-color: darkgrey;
     display: flex;
     justify-content: center;
+    
+    grid-column: span 4;
 }
 
 .number-card > p {
@@ -126,4 +128,8 @@
 
 .justify-content-between {
     justify-content: space-between;
+}
+
+.items-center {
+    align-items: center;
 }
