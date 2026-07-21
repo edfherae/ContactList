@@ -10,6 +10,7 @@ export class SearchModal {
     private modalCloseButton : HTMLParagraphElement;
     private modalOutput : HTMLDivElement;
     searchContacts : (name: string, vacancy: string, phoneNumber: string) => Contact[];
+    openChangeModal : (id: number) => void;
 
     constructor(
         modalWindow : HTMLDialogElement,
@@ -21,6 +22,7 @@ export class SearchModal {
         modalCloseButton : HTMLParagraphElement, 
         modalOutput : HTMLDivElement,
         searchContacts : (name: string, vacancy: string, phoneNumber: string) => Contact[],
+        openChangeModal : (id: number) => void,
     ) {
         this.modalWindow = modalWindow;
         this.modalAction = modalAction;
@@ -31,6 +33,7 @@ export class SearchModal {
         this.modalCloseButton = modalCloseButton;
         this.modalOutput = modalOutput;
         this.searchContacts = searchContacts;
+        this.openChangeModal = openChangeModal;
     }
 
     open() {
@@ -43,15 +46,12 @@ export class SearchModal {
         this.modalPhoneNumberInput.placeholder = "Number";
 
         this.modalSubmitButton.addEventListener("click", () => {
-            
-
-            let HTML = this.searchContacts(this.modalNameInput.value, this.modalVacancyInput.value, this.modalPhoneNumberInput.value).map(contact => `
-                <div>
-                    <p>${contact.name}</p><p>${contact.vacancy}</p><p>${contact.phoneNumber}</p>
-                    <button onclick="openChangeModal(${contact.id})">Change</button>
-                    <button onclick="deleteContact(${contact.id}, ${contact.name[0]})">Delete</button>
-                </div>`)
-            this.modalOutput.innerHTML = HTML.join("");
+            this.render();
+                // `<div>
+                //     <p>${contact.name}</p><p>${contact.vacancy}</p><p>${contact.phoneNumber}</p>
+                //     <button onclick="openChangeModal(${contact.id})">Change</button>
+                //     <button onclick="deleteContact(${contact.id}, ${contact.name[0]})">Delete</button>
+                // </div>`)
             
             
             //добавить кнопки изменения и удаления
@@ -61,5 +61,27 @@ export class SearchModal {
         });
         
         this.modalWindow.showModal();
+    }
+    render() {
+        this.modalOutput.innerHTML = "";
+
+        this.searchContacts(this.modalNameInput.value, this.modalVacancyInput.value, this.modalPhoneNumberInput.value)
+        .map(contact => {
+            const div = document.createElement("div");
+
+            const p_1 = document.createElement("p");
+            p_1.textContent = contact.name
+            const p_2 = document.createElement("p");
+            p_2.textContent = contact.vacancy;
+            const p_3 = document.createElement("p");
+            p_2.textContent = contact.phoneNumber
+            const buttonChange = document.createElement("button");
+            buttonChange.textContent = "Change";
+            buttonChange.addEventListener("click", () => this.openChangeModal(contact.id));
+            const buttonSearch = document.createElement("button");
+
+            div.append(p_1, p_2, p_3, buttonChange, buttonSearch);
+            this.modalOutput.append(div);
+        });
     }
 }

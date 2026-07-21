@@ -9,6 +9,7 @@ export interface ContactStore {
     getLettersCount : () => Map<string, number>,
     clear : () => void,
     searchContacts : (name: string, vacancy: string, phoneNumber: string) => Contact[];
+    changeContact : (newContact : Contact) => void;
 }
 
 export function createContactStore() : ContactStore;
@@ -61,5 +62,13 @@ export function createContactStore(contacts? : Contact[]) : ContactStore {
                 (phoneNumber === "" ? false : contact.phoneNumber.toLowerCase().trim().includes(phoneNumber.toLowerCase().trim()));
             });
         },
+        changeContact (newContact : Contact) {
+            let contact = data.find(contact => contact.id === newContact.id);
+            if(contact) {
+                contact.name = newContact.name;
+                contact.phoneNumber = newContact.phoneNumber;
+                contact.vacancy = newContact.vacancy;
+            }
+        }
     }
 }

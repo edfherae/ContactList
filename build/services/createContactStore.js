@@ -43,5 +43,13 @@ export function createContactStore(contacts) {
                     (phoneNumber === "" ? false : contact.phoneNumber.toLowerCase().trim().includes(phoneNumber.toLowerCase().trim()));
             });
         },
+        changeContact(newContact) {
+            let contact = data.find(contact => contact.id === newContact.id);
+            if (contact) {
+                contact.name = newContact.name;
+                contact.phoneNumber = newContact.phoneNumber;
+                contact.vacancy = newContact.vacancy;
+            }
+        }
     };
 }

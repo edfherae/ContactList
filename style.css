@@ -119,3 +119,11 @@
     font-family: sans-serif;
     cursor: pointer;
 }
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}

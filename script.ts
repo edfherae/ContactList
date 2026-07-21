@@ -5,6 +5,7 @@ import { Alphabet } from "./components/Alphabet.js";
 import { ContactList } from "./components/ContactList.js";
 import { AddNumberForm } from "./components/AddNumberForm.js";
 import { SearchModal } from "./components/searchModal.js";
+import { ChangeModal } from "./components/changeModal.js";
 
 const contactStore = createContactStore(
     [
@@ -26,6 +27,22 @@ const addNumberForm = new AddNumberForm(
 );
 const clearListButton = document.getElementById("clearListButton") as HTMLButtonElement;
 const searchButton = document.getElementById("searchNumberButton");
+
+const changeModal = new ChangeModal(changeContact);
+function changeContact(contact : Contact) {
+    contactStore.changeContact(contact);
+    // if is active
+    //contactList.render(contactList.currentLetter, contactStore.getContactsByLetter(letter));
+    alphabet.render(contactStore.getLettersCount(), onLetterSelect);
+}
+
+// поиск по айди от searchModal контакта и передача его в changeModal
+function openChangeModal(id: number) {
+    const contact = contactStore.getContactById(id);
+    if(contact) changeModal.open(contact);
+    else alert("не найден такой контакт в базе")
+}
+
 const searchModal = new SearchModal(
     document.querySelector(".modal-window") as HTMLDialogElement,
     document.querySelector(".modal-action") as HTMLHeadingElement, 
@@ -35,7 +52,8 @@ const searchModal = new SearchModal(
     document.querySelector(".modal-submit") as HTMLButtonElement,
     document.querySelector(".modal-close") as HTMLParagraphElement,
     document.querySelector(".modal-output") as HTMLDivElement,
-    contactStore.searchContacts
+    contactStore.searchContacts,
+    openChangeModal
 );
 searchButton?.addEventListener("click", () => searchModal.open());
 // (document.querySelector(".modal-window") as HTMLDialogElement).showModal()

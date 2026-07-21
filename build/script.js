@@ -3,6 +3,7 @@ import { Alphabet } from "./components/Alphabet.js";
 import { ContactList } from "./components/ContactList.js";
 import { AddNumberForm } from "./components/AddNumberForm.js";
 import { SearchModal } from "./components/searchModal.js";
+import { ChangeModal } from "./components/changeModal.js";
 const contactStore = createContactStore([
     { id: 3, name: "bob", vacancy: "DevOps", phoneNumber: "01023336667" },
     { id: 1, name: "a", vacancy: "SEO", phoneNumber: "88005553535" },
@@ -13,7 +14,22 @@ const contactList = new ContactList(document.querySelector(".numbers-output-cont
 const addNumberForm = new AddNumberForm(document.querySelector(".add-number-form"), document.querySelector(".name-input"), document.querySelector(".vacancy-input"), document.querySelector(".number-input"), document.querySelector(".add-number-button"), onFormSubmit);
 const clearListButton = document.getElementById("clearListButton");
 const searchButton = document.getElementById("searchNumberButton");
-const searchModal = new SearchModal(document.querySelector(".modal-window"), document.querySelector(".modal-action"), document.querySelector(".modal-name"), document.querySelector(".modal-vacancy"), document.querySelector(".modal-number"), document.querySelector(".modal-submit"), document.querySelector(".modal-close"), document.querySelector(".modal-output"), contactStore.searchContacts);
+const changeModal = new ChangeModal(changeContact);
+function changeContact(contact) {
+    contactStore.changeContact(contact);
+    // if is active
+    //contactList.render(contactList.currentLetter, contactStore.getContactsByLetter(letter));
+    alphabet.render(contactStore.getLettersCount(), onLetterSelect);
+}
+// поиск по айди от searchModal контакта и передача его в changeModal
+function openChangeModal(id) {
+    const contact = contactStore.getContactById(id);
+    if (contact)
+        changeModal.open(contact);
+    else
+        alert("не найден такой контакт в базе");
+}
+const searchModal = new SearchModal(document.querySelector(".modal-window"), document.querySelector(".modal-action"), document.querySelector(".modal-name"), document.querySelector(".modal-vacancy"), document.querySelector(".modal-number"), document.querySelector(".modal-submit"), document.querySelector(".modal-close"), document.querySelector(".modal-output"), contactStore.searchContacts, openChangeModal);
 searchButton === null || searchButton === void 0 ? void 0 : searchButton.addEventListener("click", () => searchModal.open());
 // (document.querySelector(".modal-window") as HTMLDialogElement).showModal()
 function onLetterSelect(letter) {
