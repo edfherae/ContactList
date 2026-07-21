@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "outDir": "./build",
+    "strict": true
+  }
+}
