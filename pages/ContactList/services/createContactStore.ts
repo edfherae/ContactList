@@ -1,4 +1,4 @@
-import Contact from "../models/Contact"
+import Contact from "../models/Contact.js"
 
 export interface ContactStore {
     getAllContacts : (sorting? : "sortByName") => Contact[],

@@ -1,4 +1,4 @@
-import Contact from "./models/Contact.js";
+import Contact from "./models/Contact";
 
 import { createContactStore } from "./services/createContactStore.js";
 import { Alphabet } from "./components/Alphabet.js";
