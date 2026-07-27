@@ -3,7 +3,8 @@
     "target": "ES6",
     "module": "esnext",
     "moduleResolution": "bundler",
+    "rootDir": "./pages",
     "outDir": "./build",
-    "strict": true
+    "strict": true,
   }
 }
