@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    justify-content: center;
+    gap: calc(35px);
+}
+
+.container__column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex {
+    display: flex;
+}
+
+.card {
+    border: 1px black solid;
+    border-radius: 20px;
+    padding: 0.25rem;
+    width: 200px;
+    height: fit-content;
+}
+
+.card--column[data-col="1"] { grid-column: 1; }
+.card--column[data-col="2"] { grid-column: 2; }
+.card--column[data-col="3"] { grid-column: 3; }
+
+.card__id--gray {
+    color: gray;
+}

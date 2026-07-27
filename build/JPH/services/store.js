@@ -7,21 +7,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import createStore from "./services/store.js";
-import RenderPosts from "./components/RenderPosts.js";
-import RenderUsers from "./components/RenderUsers.js";
-import RenderAlbums from "./components/RenderAlbums.js";
-function main() {
+export default function createStore() {
     return __awaiter(this, void 0, void 0, function* () {
-        const store = yield createStore();
-        const [usersColumn, albumsColumn, postsColumn] = [
-            document.getElementById("users-column"),
-            document.getElementById("albums-column"),
-            document.getElementById("posts-column")
-        ];
-        usersColumn.innerHTML += RenderUsers(store.getUsers());
-        albumsColumn.innerHTML += RenderAlbums(store.getAlbums(), store.getUsers());
-        postsColumn.innerHTML += RenderPosts(store.getPosts(), store.getUsers());
+        const data = {
+            users: [],
+            posts: [],
+            albums: []
+        };
+        try {
+            data.users = yield (yield fetch("https://jsonplaceholder.typicode.com/users")).json();
+            data.posts = yield (yield fetch("https://jsonplaceholder.typicode.com/posts")).json();
+            data.albums = yield (yield fetch("https://jsonplaceholder.typicode.com/albums")).json();
+        }
+        catch (error) {
+            console.log(error);
+        }
+        return {
+            getUsers() { return data.users; },
+            getPosts() { return data.posts; },
+            getAlbums() { return data.albums; }
+        };
     });
 }
-main();
