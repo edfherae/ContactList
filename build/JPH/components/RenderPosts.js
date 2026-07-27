@@ -1,9 +1,12 @@
 export default function RenderPosts(posts, users) {
-    return `${posts.map(post => { var _a; return `
-        <div class="card card--column" data-col="3">
-            <p>User ${(_a = users.find((User) => User.id === post.userId)) === null || _a === void 0 ? void 0 : _a.name}:</p>
-            <h3>${post.title}</h3>
-            <p>${post.body}</p>
-        </div>
-    `; }).join("")}`;
+    if (posts.length > 0) {
+        return `${posts.map(post => { var _a; var _b; return `
+                <div class="card">
+                    <p class="pb-1">User ${(_b = (_a = users.get(post.userId)) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : post.userId}:</p>
+                    <h3 class="pb-1">${post.title}</h3>
+                    <p class="pb-1">${post.body}</p>
+                </div>
+            `; }).join("")}`;
+    }
+    return "";
 }
